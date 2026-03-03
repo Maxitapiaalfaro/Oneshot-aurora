@@ -7,8 +7,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
  * Endpoint para controlar la ejecución de agentes (pausar, detener, modificar)
  */
 
-import { BaseAgent } from '../../../../../backend/src/agents/BaseAgent';
-import { ExecutionControl } from '../../../../../backend/src/types/schemas';
+import { BaseAgent } from '../../../lib/backend/agents/BaseAgent';
+import { ExecutionControl } from '../../../lib/backend/types/schemas';
 
 // Instancia única del agente base
 let baseAgentInstance: BaseAgent | null = null;

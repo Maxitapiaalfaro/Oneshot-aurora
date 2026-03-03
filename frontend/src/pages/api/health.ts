@@ -1,7 +1,7 @@
 // path: /frontend/src/pages/api/health.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { isDemoMode } from '../../../../backend/src/utils/repositoryFactory';
+import { isDemoMode } from '../../lib/backend/utils/repositoryFactory';
 
 /**
  * Next.js API Route: GET /api/health

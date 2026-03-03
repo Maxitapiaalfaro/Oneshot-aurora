@@ -10,9 +10,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
  * Permite deployment en Vercel sin necesidad de servidor Express separado
  */
 
-// Importar tipos y lógica del backend
-import { BaseAgent } from '../../../../../backend/src/agents/BaseAgent';
-import { UserMessage } from '../../../../../backend/src/types/schemas';
+// Importar tipos y lógica del backend (copiado localmente para Vercel)
+import { BaseAgent } from '../../../lib/backend/agents/BaseAgent';
+import { UserMessage } from '../../../lib/backend/types/schemas';
 import { v4 as uuidv4 } from 'uuid';
 
 // Instancia única del agente base
