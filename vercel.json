@@ -11,15 +11,5 @@
       "source": "/(.*)",
       "destination": "/frontend/$1"
     }
-  ],
-  "env": {
-    "GEMINI_API_KEY": "@gemini_api_key",
-    "DEMO_MODE": "true"
-  },
-  "build": {
-    "env": {
-      "GEMINI_API_KEY": "@gemini_api_key",
-      "DEMO_MODE": "true"
-    }
-  }
+  ]
 }
