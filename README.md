@@ -2,6 +2,23 @@
 
 Aurora es una plataforma de alta performance de inteligencia clínica multiagente diseñada específicamente para psicólogos. Implementa el estándar jerárquico de 2025 para orquestación de agentes de IA.
 
+## 🎭 Modos de Operación
+
+Aurora soporta dos modos de operación:
+
+### Modo Demo (Zero-Config)
+- ✅ **Setup rápido**: Solo requiere `GEMINI_API_KEY`
+- ✅ **Sin base de datos**: Almacenamiento en memoria
+- ✅ **Despliegue inmediato**: Perfecto para Vercel
+- ⚠️ **Datos temporales**: No persisten entre reinicios
+- 📖 **Documentación**: Ver [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### Modo Producción
+- ✅ **Persistencia permanente**: Firebase/Firestore
+- ✅ **Autenticación**: Firebase Auth
+- ✅ **Escalable**: Para uso profesional
+- 📖 **Documentación**: Ver [DEPLOYMENT.md](./DEPLOYMENT.md)
+
 ## 🌟 Características Principales
 
 ### Motor Multiagente Jerárquico (2025 Standard)
@@ -25,26 +42,68 @@ Aurora es una plataforma de alta performance de inteligencia clínica multiagent
 ## 🏗️ Arquitectura Técnica
 
 ### Backend (Node.js + TypeScript)
-- Express.js para API REST
-- Firebase Admin para persistencia (Firestore)
+- Express.js para API REST (opcional - puede usar Next.js API Routes)
+- **Modo Demo**: MemoryRepository (in-memory storage)
+- **Modo Producción**: Firebase Admin para persistencia (Firestore)
 - Google Genai para capacidades de IA
 - Zod para validación de esquemas
 - Ejecución paralela de sub-agentes
+- **Patrón Repository**: Abstracción de persistencia con toggle automático
 
 ### Frontend (Next.js + React + TypeScript)
-- Next.js 14 con TypeScript estricto
+- Next.js 15 con TypeScript estricto
+- **Next.js API Routes**: Backend integrado para despliegue en Vercel
 - Progressive Disclosure Components
 - Interfaz 100% en español
 - Diseño responsive y accesible
 
-## 📋 Requisitos Previos
+## 📋 Requisitos
 
+### Modo Demo (Mínimos)
 - Node.js >= 18.0.0
 - npm >= 9.0.0
-- Cuenta de Google Cloud con Firestore habilitado
-- API Key de Google Gemini
+- API Key de Google Gemini ([Obtener aquí](https://makersuite.google.com/app/apikey))
 
-## 🚀 Instalación
+### Modo Producción (Adicionales)
+- Cuenta de Google Cloud con Firestore habilitado
+- Service Account de Firebase
+
+## 🚀 Quick Start (Modo Demo)
+
+### Opción 1: Despliegue en Vercel (Recomendado)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Maxitapiaalfaro/Oneshot-aurora)
+
+1. Haz clic en el botón "Deploy with Vercel"
+2. Configura solo una variable de entorno: `GEMINI_API_KEY`
+3. ¡Despliega! Tu Aurora estará lista en < 5 minutos
+
+**Ver guía detallada**: [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### Opción 2: Desarrollo Local (Modo Demo)
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Maxitapiaalfaro/Oneshot-aurora.git
+cd Oneshot-aurora
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Configurar .env (solo Gemini API Key)
+cp .env.example .env
+# Edita .env y agrega: GEMINI_API_KEY=tu-api-key
+
+# 4. Ejecutar (Next.js con API Routes integradas)
+cd frontend
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:3000`
+
+**Verifica el modo**: Visita `http://localhost:3000/api/health`
+
+## 🚀 Instalación Completa (Modo Producción)
 
 ### 1. Clonar el repositorio
 
