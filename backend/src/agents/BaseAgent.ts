@@ -11,7 +11,7 @@ import {
   ExecutionControl,
 } from '../types/schemas';
 import { AgentResponse, ParallelExecutionResult, SubAgentExecution } from '../types/agent';
-import { FirestoreUtils } from '../utils/firestore';
+import { getRepository } from '../utils/repositoryFactory';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -27,6 +27,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class BaseAgent {
   private administrativeAgent: AdministrativeAgent;
   private clinicalAnalysisAgent: ClinicalAnalysisAgent;
+  private repository = getRepository();
 
   private readonly systemPrompt = `Eres el Agente Base Orquestador de Aurora, una plataforma de inteligencia clínica para psicólogos.
 
@@ -78,7 +79,7 @@ Estilo de comunicación:
 
       // Actualizar estado a procesando
       sessionState.status = 'processing';
-      await FirestoreUtils.saveSessionState(sessionState);
+      await this.repository.saveSessionState(sessionState);
 
       // Fase 1: Análisis y Planificación (usando preguntas socráticas si es necesario)
       const analysisResult = await this.analyzeRequest(userMessage.message, sessionState);
@@ -91,7 +92,7 @@ Estilo de comunicación:
           content: analysisResult.clarificationQuestion || '',
           timestamp: new Date(),
         });
-        await FirestoreUtils.saveSessionState(sessionState);
+        await this.repository.saveSessionState(sessionState);
 
         return {
           content: analysisResult.clarificationQuestion || '',
@@ -119,7 +120,7 @@ Estilo de comunicación:
         content: response.content,
         timestamp: new Date(),
       });
-      await FirestoreUtils.saveSessionState(sessionState);
+      await this.repository.saveSessionState(sessionState);
 
       return response;
     } catch (error) {
@@ -383,7 +384,7 @@ Mantén un tono profesional y empático.`;
    * Controlar ejecución (pausar, detener, modificar)
    */
   async controlExecution(control: ExecutionControl): Promise<{ success: boolean; message: string }> {
-    const sessionState = await FirestoreUtils.getSessionState(control.sessionId);
+    const sessionState = await this.repository.getSessionState(control.sessionId);
 
     if (!sessionState) {
       return {
@@ -395,7 +396,7 @@ Mantén un tono profesional y empático.`;
     switch (control.action) {
       case 'pause':
         sessionState.status = 'paused';
-        await FirestoreUtils.saveSessionState(sessionState);
+        await this.repository.saveSessionState(sessionState);
         return {
           success: true,
           message: 'Análisis pausado. Puedes reanudarlo cuando desees.',
@@ -403,7 +404,7 @@ Mantén un tono profesional y empático.`;
 
       case 'resume':
         sessionState.status = 'processing';
-        await FirestoreUtils.saveSessionState(sessionState);
+        await this.repository.saveSessionState(sessionState);
         return {
           success: true,
           message: 'Análisis reanudado.',
@@ -411,7 +412,7 @@ Mantén un tono profesional y empático.`;
 
       case 'stop':
         sessionState.status = 'idle';
-        await FirestoreUtils.saveSessionState(sessionState);
+        await this.repository.saveSessionState(sessionState);
         return {
           success: true,
           message: 'Análisis detenido.',
@@ -423,7 +424,7 @@ Mantén un tono profesional y empático.`;
         } else {
           sessionState.metadata = control.parameters;
         }
-        await FirestoreUtils.saveSessionState(sessionState);
+        await this.repository.saveSessionState(sessionState);
         return {
           success: true,
           message: 'Parámetros modificados exitosamente.',
@@ -441,7 +442,7 @@ Mantén un tono profesional y empático.`;
    * Obtener o crear sesión
    */
   private async getOrCreateSession(sessionId: string, userId: string): Promise<SessionState> {
-    let sessionState = await FirestoreUtils.getSessionState(sessionId);
+    let sessionState = await this.repository.getSessionState(sessionId);
 
     if (!sessionState) {
       sessionState = {
@@ -450,7 +451,7 @@ Mantén un tono profesional y empático.`;
         status: 'idle',
         history: [],
       };
-      await FirestoreUtils.saveSessionState(sessionState);
+      await this.repository.saveSessionState(sessionState);
     }
 
     return sessionState;
