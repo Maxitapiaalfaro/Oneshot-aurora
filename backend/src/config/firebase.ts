@@ -1,0 +1,34 @@
+// path: /backend/src/config/firebase.ts
+
+import admin from 'firebase-admin';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+/**
+ * Inicialización de Firebase Admin SDK (Server-Side Only)
+ * Esta configuración garantiza que Firestore solo sea accesible desde el servidor,
+ * cumpliendo con la arquitectura de seguridad requerida.
+ */
+
+const serviceAccount = {
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+};
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+  });
+}
+
+export const db = admin.firestore();
+export const auth = admin.auth();
+
+// Configuración de Firestore para optimizar el rendimiento
+db.settings({
+  ignoreUndefinedProperties: true,
+});
+
+export default admin;
