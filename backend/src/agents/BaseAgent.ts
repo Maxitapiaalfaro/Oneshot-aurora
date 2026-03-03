@@ -5,7 +5,6 @@ import { AdministrativeAgent } from './AdministrativeAgent';
 import { ClinicalAnalysisAgent } from './ClinicalAnalysisAgent';
 import {
   UserMessage,
-  BaseAgentTask,
   SessionState,
   AdministrativeTask,
   ClinicalAnalysisTask,
@@ -28,7 +27,6 @@ import { v4 as uuidv4 } from 'uuid';
 export class BaseAgent {
   private administrativeAgent: AdministrativeAgent;
   private clinicalAnalysisAgent: ClinicalAnalysisAgent;
-  private activeSessions: Map<string, SessionState>;
 
   private readonly systemPrompt = `Eres el Agente Base Orquestador de Aurora, una plataforma de inteligencia clínica para psicólogos.
 
@@ -61,7 +59,6 @@ Estilo de comunicación:
   constructor() {
     this.administrativeAgent = new AdministrativeAgent();
     this.clinicalAnalysisAgent = new ClinicalAnalysisAgent();
-    this.activeSessions = new Map();
   }
 
   /**
@@ -110,7 +107,7 @@ Estilo de comunicación:
       const tasks = await this.decomposeTasks(analysisResult);
 
       // Fase 3: Ejecución (paralela o secuencial)
-      const executionResult = await this.executeTasks(tasks, sessionState);
+      const executionResult = await this.executeTasks(tasks);
 
       // Fase 4: Síntesis de resultados
       const response = await this.synthesizeResults(executionResult, userMessage.message);
@@ -168,7 +165,7 @@ Devuelve SOLO el JSON, sin texto adicional.`;
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const responseText = result.text;
+    const responseText = result.text || '';
     
     // Extraer JSON del texto
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -211,7 +208,7 @@ Devuelve SOLO el JSON, sin texto adicional.`;
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const responseText = result.text;
+    const responseText = result.text || '';
     
     // Extraer JSON del texto
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -228,7 +225,6 @@ Devuelve SOLO el JSON, sin texto adicional.`;
    */
   private async executeTasks(
     tasks: Array<{ type: 'administrative' | 'clinical'; details: any }>,
-    sessionState: SessionState
   ): Promise<ParallelExecutionResult> {
     const startTime = Date.now();
     const results: SubAgentExecution[] = [];
@@ -354,7 +350,7 @@ Mantén un tono profesional y empático.`;
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const synthesizedResponse = result.text;
+    const synthesizedResponse = result.text || '';
 
     return {
       content: synthesizedResponse,

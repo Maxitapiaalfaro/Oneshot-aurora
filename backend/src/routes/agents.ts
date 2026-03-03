@@ -12,7 +12,7 @@ const baseAgent = new BaseAgent();
  * POST /api/agents/message
  * Procesar mensaje del usuario a través del sistema de agentes
  */
-router.post('/message', async (req: Request, res: Response) => {
+router.post('/message', async (req: Request, res: Response): Promise<any> => {
   try {
     const { sessionId, userId, message } = req.body;
 
@@ -50,7 +50,7 @@ router.post('/message', async (req: Request, res: Response) => {
  * POST /api/agents/control
  * Controlar la ejecución de agentes (pausar, detener, modificar)
  */
-router.post('/control', async (req: Request, res: Response) => {
+router.post('/control', async (req: Request, res: Response): Promise<any> => {
   try {
     const { sessionId, action, parameters } = req.body;
 
@@ -86,7 +86,7 @@ router.post('/control', async (req: Request, res: Response) => {
  * GET /api/agents/health
  * Verificar que el servicio de agentes está funcionando
  */
-router.get('/health', (req: Request, res: Response) => {
+router.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     service: 'Aurora Multi-Agent System',

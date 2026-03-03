@@ -142,7 +142,7 @@ Presenta tu análisis de forma estructurada en español.`;
     const analysis = result.text;
 
     // Extraer insights estructurados del análisis
-    const insights = await this.extractInsights(analysis);
+    const insights = await this.extractInsights(analysis || '');
 
     return {
       summary: analysis,
@@ -194,7 +194,7 @@ Proporciona insights con nivel de confianza para cada patrón.`;
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const analysis = result.text;
+    const analysis = result.text || '';
     const insights = await this.extractInsights(analysis);
 
     return {
@@ -230,7 +230,7 @@ Cada insight debe incluir:
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const analysis = result.text;
+    const analysis = result.text || '';
     const insights = await this.extractInsights(analysis);
 
     return {
@@ -243,7 +243,7 @@ Cada insight debe incluir:
    * Evaluación de riesgos
    */
   private async assessRisk(task: ClinicalAnalysisTask) {
-    const { sessionNotes, patientId } = task.parameters;
+    const { sessionNotes } = task.parameters;
 
     const prompt = `${this.systemPrompt}
 
@@ -266,7 +266,7 @@ Sé específico y fundamenta cada observación.`;
       model: 'gemini-2.0-flash-exp',
       contents: prompt,
     });
-    const analysis = result.text;
+    const analysis = result.text || '';
     const insights = await this.extractInsights(analysis);
 
     // Determinar nivel de riesgo basado en el análisis
@@ -300,7 +300,7 @@ Devuelve SOLO el JSON, sin texto adicional.`;
         model: 'gemini-2.0-flash-exp',
         contents: prompt,
       });
-      const responseText = result.text;
+      const responseText = result.text || '';
       
       // Intentar extraer JSON del texto
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
