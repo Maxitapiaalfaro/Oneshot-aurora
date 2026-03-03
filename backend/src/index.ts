@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import agentsRouter from './routes/agents';
+import { isDemoMode } from './utils/repositoryFactory';
 
 dotenv.config();
 
@@ -31,11 +32,17 @@ app.use('/api/agents', agentsRouter);
 
 // Health check
 app.get('/health', (_req, res) => {
+  const demoMode = isDemoMode();
   res.json({
     status: 'ok',
     service: 'Aurora Backend API',
     version: '1.0.0',
+    mode: demoMode ? 'demo' : 'production',
     timestamp: new Date().toISOString(),
+    features: {
+      persistence: demoMode ? 'in-memory (temporary)' : 'firestore (permanent)',
+      authentication: demoMode ? 'disabled' : 'enabled',
+    },
   });
 });
 
@@ -58,6 +65,7 @@ app.use((req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
+  const demoMode = isDemoMode();
   console.log('='.repeat(50));
   console.log('🚀 Aurora Backend API');
   console.log('='.repeat(50));
@@ -65,6 +73,12 @@ app.listen(PORT, () => {
   console.log(`🌐 URL: http://localhost:${PORT}`);
   console.log(`🏥 Health: http://localhost:${PORT}/health`);
   console.log(`🤖 Agents API: http://localhost:${PORT}/api/agents`);
+  console.log('-'.repeat(50));
+  console.log(`🎯 Modo: ${demoMode ? '🎭 DEMO (in-memory)' : '🔥 PRODUCCIÓN (Firestore)'}`);
+  if (demoMode) {
+    console.log('⚠️  Los datos NO persisten entre reinicios');
+    console.log('💡 Para modo producción, configure Firebase en .env');
+  }
   console.log('='.repeat(50));
 });
 
