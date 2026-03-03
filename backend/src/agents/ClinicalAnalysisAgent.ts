@@ -135,7 +135,10 @@ Por favor proporciona:
 
 Presenta tu análisis de forma estructurada en español.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const analysis = result.text;
 
     // Extraer insights estructurados del análisis
@@ -187,7 +190,10 @@ Identifica:
 
 Proporciona insights con nivel de confianza para cada patrón.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const analysis = result.text;
     const insights = await this.extractInsights(analysis);
 
@@ -220,7 +226,10 @@ Cada insight debe incluir:
 - Nivel de confianza (0.0 a 1.0)
 - Razonamiento basado en evidencia`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const analysis = result.text;
     const insights = await this.extractInsights(analysis);
 
@@ -253,7 +262,10 @@ Evalúa:
 
 Sé específico y fundamenta cada observación.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const analysis = result.text;
     const insights = await this.extractInsights(analysis);
 
@@ -284,7 +296,10 @@ ${analysisText}
 Devuelve SOLO el JSON, sin texto adicional.`;
 
     try {
-      const result = await geminiModel.generate(prompt);
+      const result = await geminiModel.generateContent({
+        model: 'gemini-2.0-flash-exp',
+        contents: prompt,
+      });
       const responseText = result.text;
       
       // Intentar extraer JSON del texto

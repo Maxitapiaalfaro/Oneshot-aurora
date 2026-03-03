@@ -8,8 +8,10 @@ dotenv.config();
 /**
  * Configuración del cliente Google Genai para los agentes de IA
  */
-const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY || '');
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
-export const geminiModel = genAI.getGenerativeModel({ model: 'gemini-pro' });
+// Modelo por defecto - Gemini 2.0 Flash
+export const geminiModel = ai.models;
 
-export default genAI;
+export { ai as genAI };
+export default ai;

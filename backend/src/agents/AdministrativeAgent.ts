@@ -106,7 +106,10 @@ Necesito programar una cita para ${patientName || 'un paciente'} el ${appointmen
 
 Genera una confirmación profesional en español y verifica si hay algún conflicto potencial o información faltante.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const aiResponse = result.text;
 
     // Guardar en Firestore
@@ -152,7 +155,10 @@ Por favor:
 2. Sugiere documentos necesarios
 3. Proporciona un mensaje de bienvenida profesional en español`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const aiResponse = result.text;
 
     return {
@@ -184,7 +190,10 @@ Texto: ${notes || task.context}
 
 Presenta los datos extraídos de forma estructurada y clara en español.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const extractedData = result.text;
 
     return {
@@ -206,7 +215,10 @@ Presenta los datos extraídos de forma estructurada y clara en español.`;
 
 Genera un recordatorio profesional y amable en español para ${patientName || 'el paciente'} sobre su cita el ${appointmentDate} a las ${appointmentTime}. ${notes ? `Información adicional: ${notes}` : ''}`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const reminderMessage = result.text;
 
     return {

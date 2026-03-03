@@ -164,7 +164,10 @@ Responde en formato JSON con: needsClarification (boolean), clarificationQuestio
 
 Devuelve SOLO el JSON, sin texto adicional.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const responseText = result.text;
     
     // Extraer JSON del texto
@@ -204,7 +207,10 @@ Responde en formato JSON con un array de sub-tareas llamado "subtasks".
 
 Devuelve SOLO el JSON, sin texto adicional.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const responseText = result.text;
     
     // Extraer JSON del texto
@@ -344,7 +350,10 @@ Proporciona:
 
 Mantén un tono profesional y empático.`;
 
-    const result = await geminiModel.generate(prompt);
+    const result = await geminiModel.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+    });
     const synthesizedResponse = result.text;
 
     return {
